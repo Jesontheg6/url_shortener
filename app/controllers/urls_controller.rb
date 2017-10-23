@@ -6,8 +6,52 @@ class UrlsController < ApplicationController
 
     def show
 
-    byebug
-
      @url = Url.find(params[:id])
 	end
+
+	 def new
+	 @url = Url.new
+	end
+
+
+	def create
+	  @url = Url.new(url_params)
+	  
+	  if @url.save
+	  	@url.shorten
+	      redirect_to @url  
+	  else
+	      render 'new'
+	  end   
+	end
+ 
+
+
+
+
+	def short
+		
+	    url = Url.find(params[:id])
+	    redirect_to url.long_url    
+	end 
+
+
+   def destroy
+	    @url = Url.find(params[:id])
+	    @url.destroy
+	    redirect_to urls_path
+	end
+
+
+
+	private 
+	def url_params
+	    params.require(:url).permit(:long_url)
+	end	
+
+
+
+
+
 end 
+
